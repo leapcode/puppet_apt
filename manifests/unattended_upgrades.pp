@@ -1,17 +1,21 @@
-class apt::unattended_upgrades {
+class apt::unattended_upgrades (
+  $config_content = undef,
+  $mailonlyonerror = true,
+  $mail_recipient = 'root',
+  $blacklisted_packages = [],
+) {
 
   package { 'unattended-upgrades':
-    ensure  => present,
-    require => Exec['refresh_apt']
+    ensure  => present
+  }
+
+  $file_content = $config_content ? {
+    undef   => template('apt/50unattended-upgrades.erb'),
+    default => $config_content
   }
 
   apt_conf { '50unattended-upgrades':
-    source      => [
-      "puppet:///modules/site_apt/${::lsbdistid}/50unattended-upgrades.${::lsbdistcodename}",
-      "puppet:///modules/site_apt/${::lsbdistid}/50unattended-upgrades",
-      "puppet:///modules/apt/${::lsbdistid}/50unattended-upgrades.${::lsbdistcodename}",
-      "puppet:///modules/apt/${::lsbdistid}/50unattended-upgrades" ],
-    require     => Package['unattended-upgrades'],
-    refresh_apt => false
+    content => $file_content,
+    require => Package['unattended-upgrades'],
   }
 }

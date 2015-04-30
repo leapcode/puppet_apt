@@ -19,13 +19,13 @@ Ubuntu support is lagging behind but not absent either.
 
  * the apt class has been moved to a paramterized class. if you were including
    this class before, after passing some variables, you will need to move to
-   instantiating the class with those variables instead. For example, if you 
+   instantiating the class with those variables instead. For example, if you
    had the following in your manifests:
 
     $apt_debian_url = 'http://localhost:9999/debian/'
     $apt_use_next_release = true
     include apt
- 
+
    you will need to remove the variables, and the include and instead do
    the following:
 
@@ -67,9 +67,9 @@ Ubuntu support is lagging behind but not absent either.
 
    you will need to remove the variables, and the include and instead do the
    following:
- 
+
     class { 'apt::listchanges': email => 'foo@example.com' }
-   
+
  * the apt::proxy_client class has been moved to a paramterized class. if you
    were including this class before, after passing some variables, you will need
    to move to instantiating the class with those variables instead. For example,
@@ -171,10 +171,10 @@ Class parameters:
 
 * disable_update
 
-  Disable "apt-get update" which is normally triggered by apt::upgrade_package 
-  and apt::dist_upgrade. 
+  Disable "apt-get update" which is normally triggered by apt::upgrade_package
+  and apt::dist_upgrade.
 
-  Note that nodes can be updated once a day by using 
+  Note that nodes can be updated once a day by using
     APT::Periodic::Update-Package-Lists "1";
   in i.e. /etc/apt/apt.conf.d/80_apt_update_daily.
 
@@ -196,7 +196,7 @@ Class parameters:
   apt/preferences file to be absent:
 
     class { 'apt': custom_preferences => false }
-  
+
 * custom_sources_list
 
   By default this module will use a basic apt/sources.list template with
@@ -334,7 +334,7 @@ the following parameterized variables, which can be changed:
 
  Example usage:
   class { 'apt::listchanges': email => 'foo@example.com' }
- 
+
 apt::proxy_client
 -----------------
 
@@ -438,7 +438,7 @@ following in your manifest:
 
   apt::preseeded_package { locales: }
 
-You can also specify the content of the seed via the content parameter, 
+You can also specify the content of the seed via the content parameter,
 for example:
 
   apt::preseeded_package { 'apticron':

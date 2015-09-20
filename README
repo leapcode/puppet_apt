@@ -17,6 +17,14 @@ Ubuntu support is lagging behind but not absent either.
 
 ! Upgrade Notice !
 
+ * Several parser functions have been updated: you need to restart your puppet
+   master, otherwise some nodes may keep on using an old, cached version!
+   (https://docs.puppetlabs.com/guides/custom_functions.html#gotchas)
+
+ * If you were using custom 50unattended-upgrades.${::lsbdistcodename} in your
+   site_apt, these are no longer supported. You should migrate to passing
+   $blacklisted_packages to the apt::unattended_upgrades class.
+
  * the apt class has been moved to a paramterized class. if you were including
    this class before, after passing some variables, you will need to move to
    instantiating the class with those variables instead. For example, if you
@@ -91,6 +99,7 @@ This module needs:
 
 - the lsb module: git://labs.riseup.net/shared-lsb
 - the common module: git://labs.riseup.net/shared-common
+- the stdlib module: https://forge.puppetlabs.com/puppetlabs/stdlib
 
 By default, on normal hosts, this module sets the configuration option
 DSelect::Clean to 'auto'. On virtual servers, the value is set by default to
@@ -461,6 +470,46 @@ Example:
     source => [ "puppet:///modules/site_apt/${::fqdn}/company_internals.list",
                 'puppet:///modules/site_apt/company_internals.list' ],
   }
+
+apt::key
+--------
+
+Deploys a secure apt OpenPGP key. This usually accompanies the
+sources.list snippets above for third party repositories. For example,
+you would do:
+
+  apt::key { 'neurodebian.gpg':
+    ensure => present,
+    source => 'puppet:///modules/site_apt/neurodebian.gpg',
+  }
+
+This deploys the key in the `/etc/apt/trusted.gpg.d` directory, which
+is assumed by secure apt to be binary OpenPGP keys and *not*
+"ascii-armored" or "plain text" OpenPGP key material. For the latter,
+use `apt::key::plain`.
+
+The `.gpg` extension is compulsory for `apt` to pickup the key properly.
+
+apt::key::plain
+---------------
+
+Deploys a secure apt OpenPGP key. This usually accompanies the
+sources.list snippets above for third party repositories. For example,
+you would do:
+
+  apt::key::plain { 'neurodebian.asc':
+    source => 'puppet:///modules/site_apt/neurodebian.asc',
+  }
+
+This deploys the key in the `${apt_base_dir}/keys` directory (as
+opposed to `$custom_key_dir` which deploys it in `keys.d`). The reason
+this exists on top of `$custom_key_dir` is to allow a more
+decentralised distribution of those keys, without having all modules
+throw their keys in the same directory in the manifests.
+
+Note that this model does *not* currently allow keys to be removed!
+Use `apt::key` instead for a more practical, revokable approach, but
+that needs binary keys.
 
 apt::upgrade_package
 --------------------

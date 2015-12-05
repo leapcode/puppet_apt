@@ -4,7 +4,6 @@
 # See LICENSE for the full license granted to you.
 
 class apt(
-  $codename = $apt::params::codename,
   $use_lts = $apt::params::use_lts,
   $use_volatile = $apt::params::use_volatile,
   $use_backports = $apt::params::use_backports,
@@ -42,31 +41,15 @@ class apt(
     require => undef,
   }
 
-  include lsb
-
-  # init $release, $next_release, $next_codename, $release_version
-  case $codename {
-    'n/a': {
-      fail("Unknown lsbdistcodename reported by facter: '$::lsbdistcodename', please fix this by setting this variable in your manifest.")
-    }
-    default: {
-      $release = debian_release($codename)
-    }
-  }
-  $release_version = debian_release_version($codename)
-  $next_codename = debian_nextcodename($codename)
-  $next_release = debian_nextrelease($release)
-
   $sources_content = $custom_sources_list ? {
     ''      => template( "apt/${::operatingsystem}/sources.list.erb"),
     default => $custom_sources_list
   }
   file {
-    # include main, security and backports
+    # include main and security
     # additional sources should be included via the apt::sources_list define
     '/etc/apt/sources.list':
       content => $sources_content,
-      require => Package['lsb'],
       notify  => Exec['refresh_apt'],
       owner   => root,
       group   => 0,
@@ -113,6 +96,19 @@ class apt(
 
   # backports uses the normal archive key now
   package { 'debian-backports-keyring': ensure => absent }
+
+  if ($use_backports and !($::debian_release in ['testing', 'unstable', 'experimental'])) {
+    apt::sources_list {
+      'backports':
+        content => "deb $backports_url ${::debian_codename}-backports ${apt::real_repos}",
+    }
+    if $include_src {
+      apt::sources_list {
+        'backports-src':
+          content => "deb-src $backports_url ${::debian_codename}-backports ${apt::real_repos}",
+      }
+    }
+  }
 
   include common::moduledir
   common::module_dir { 'apt': }

@@ -37,13 +37,13 @@ Ubuntu support is lagging behind but not absent either.
 
  * the apt class has been moved to a paramterized class. if you were including
    this class before, after passing some variables, you will need to move to
-   instantiating the class with those variables instead. For example, if you
+   instantiating the class with those variables instead. For example, if you 
    had the following in your manifests:
 
     $apt_debian_url = 'http://localhost:9999/debian/'
     $apt_use_next_release = true
     include apt
-
+ 
    you will need to remove the variables, and the include and instead do
    the following:
 
@@ -85,9 +85,9 @@ Ubuntu support is lagging behind but not absent either.
 
    you will need to remove the variables, and the include and instead do the
    following:
-
+ 
     class { 'apt::listchanges': email => 'foo@example.com' }
-
+   
  * the apt::proxy_client class has been moved to a paramterized class. if you
    were including this class before, after passing some variables, you will need
    to move to instantiating the class with those variables instead. For example,
@@ -196,6 +196,14 @@ Class parameters:
   If this variable is set the default repositories list ("main contrib non-free")
   is overriden.
 
+* disable_update
+
+  Disable "apt-get update" which is normally triggered by apt::upgrade_package 
+  and apt::dist_upgrade. 
+
+  Note that nodes can be updated once a day by using 
+    APT::Periodic::Update-Package-Lists "1";
+  in i.e. /etc/apt/apt.conf.d/80_apt_update_daily.
 
 * custom_preferences
 
@@ -215,7 +223,7 @@ Class parameters:
   apt/preferences file to be absent:
 
     class { 'apt': custom_preferences => false }
-
+  
 * custom_sources_list
 
   By default this module will use a basic apt/sources.list template with
@@ -295,9 +303,6 @@ trigger any action per-se: other resources may notify it, other
 classes may inherit from this one and add to its subscription list
 using the plusignment ('+>') operator. A real-world example can be
 seen in the apt::dist_upgrade::initiator source.
-
-When this class is included the APT indexes are updated on every
-Puppet run due to the author's lack of Puppet wizardry.
 
 apt::dist_upgrade::initiator
 ----------------------------

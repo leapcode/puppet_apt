@@ -1,14 +1,15 @@
+# Configure an apt source
 define apt::sources_list (
-  $ensure = 'present',
-  $source = '',
+  $ensure  = 'present',
+  $source  = undef,
   $content = undef
 ) {
 
   if $ensure == 'present' {
-    if $source == '' and $content == undef {
+    if $source == undef and $content == undef {
       fail("One of \$source or \$content must be specified for apt_sources_snippet ${name}")
     }
-    if $source != '' and $content != undef {
+    if $source != undef and $content != undef {
       fail("Only one of \$source or \$content must specified for apt_sources_snippet ${name}")
     }
   }
@@ -22,7 +23,9 @@ define apt::sources_list (
   # apparently doesn't.
   file { "/etc/apt/sources.list.d/${realname}.list":
     ensure => $ensure,
-    owner  => root, group => 0, mode => '0644',
+    mode   => '0644',
+    owner  => 'root',
+    group  => 0,
     notify => Exec['apt_updated'],
   }
 

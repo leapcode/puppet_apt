@@ -5,7 +5,6 @@
 #
 EMAIL="<%= scope.lookupvar('apt::apticron::email') %>"
 
-
 #
 # Set DIFF_ONLY to "1" to only output the difference of the current run
 # compared to the last run (ie. only new upgrades since the last run). If there
@@ -30,7 +29,6 @@ LISTCHANGES_PROFILE="<%= scope.lookupvar('apt::apticron::listchanges_profile') %
 SYSTEM="<%= v %>"
 <% end -%>
 
-
 #
 # Set IPADDRESSNUM if you would like to configure the maximal number of IP
 # addresses apticron displays. The default is to display 1 address of each
@@ -41,7 +39,6 @@ SYSTEM="<%= v %>"
 IPADDRESSNUM="<%= v %>"
 <% end -%>
 
-
 #
 # Set IPADDRESSES to a whitespace separated list of reachable addresses for
 # this system. By default, apticron will try to work these out using the
@@ -51,7 +48,6 @@ IPADDRESSNUM="<%= v %>"
 <% unless (v=scope.lookupvar('apt::apticron::ipaddresses')).to_s == "false" -%>
 IPADDRESSES="<%= v %>"
 <% end -%>
-
 
 #
 # Set NOTIFY_HOLDS="0" if you don't want to be notified about new versions of
@@ -73,10 +69,12 @@ NOTIFY_HOLDS="<%= scope.lookupvar('apt::apticron::notifyholds') %>"
 # NOTIFY_NEW="0"
 NOTIFY_NEW="<%= scope.lookupvar('apt::apticron::notifynew') %>"
 
+
 #
 # Set CUSTOM_SUBJECT if you want to replace the default subject used in
 # the notification e-mails. This may help filtering/sorting client-side e-mail.
+# If you want to use internal vars please use single quotes here. Ex:
+# ='[apticron] :  package update(s)'
 #
 # CUSTOM_SUBJECT=""
 CUSTOM_SUBJECT="<%= scope.lookupvar('apt::apticron::customsubject') %>"
-

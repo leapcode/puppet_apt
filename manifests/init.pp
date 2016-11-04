@@ -11,7 +11,6 @@ class apt(
   $use_next_release = $apt::params::use_next_release,
   $debian_url = $apt::params::debian_url,
   $security_url = $apt::params::security_url,
-  $backports_url = $apt::params::backports_url,
   $lts_url = $apt::params::lts_url,
   $volatile_url = $apt::params::volatile_url,
   $ubuntu_url = $apt::params::ubuntu_url,
@@ -20,20 +19,6 @@ class apt(
   $custom_sources_list = '',
   $custom_key_dir = $apt::params::custom_key_dir
 ) inherits apt::params {
-  case $::operatingsystem {
-    'debian': {
-      $real_repos = $repos ? {
-        'auto'  => 'main contrib non-free',
-        default => $repos,
-      }
-    }
-    'ubuntu': {
-      $real_repos = $repos ? {
-        'auto'  => 'main restricted universe multiverse',
-        default => $repos,
-      }
-    }
-  }
 
   package { 'apt':
     ensure  => installed,
@@ -55,14 +40,14 @@ class apt(
       mode    => '0644';
   }
 
-  apt_conf { '02show_upgraded':
+  ::apt::apt_conf { '02show_upgraded':
     source => [ "puppet:///modules/site_apt/${::fqdn}/02show_upgraded",
                 'puppet:///modules/site_apt/02show_upgraded',
                 'puppet:///modules/apt/02show_upgraded' ]
   }
 
   if ( $::virtual == 'vserver' ) {
-    apt_conf { '03clean_vserver':
+    ::apt::apt_conf { '03clean_vserver':
       source => [ "puppet:///modules/site_apt/${::fqdn}/03clean_vserver",
                   'puppet:///modules/site_apt/03clean_vserver',
                   'puppet:///modules/apt/03clean_vserver' ],
@@ -70,7 +55,7 @@ class apt(
     }
   }
   else {
-    apt_conf { '03clean':
+    ::apt::apt_conf { '03clean':
       source => [ "puppet:///modules/site_apt/${::fqdn}/03clean",
                   'puppet:///modules/site_apt/03clean',
                   'puppet:///modules/apt/03clean' ]
@@ -82,8 +67,6 @@ class apt(
       include apt::preferences::absent
     }
     default: {
-      # When squeeze becomes the stable branch, transform this file's header
-      # into a preferences.d file
       include apt::preferences
     }
   }
@@ -93,18 +76,15 @@ class apt(
   ## This package should really always be current
   package { 'debian-archive-keyring': ensure => latest }
 
-  # backports uses the normal archive key now
-  package { 'debian-backports-keyring': ensure => absent }
-
   if ($use_backports and !($::debian_release in ['testing', 'unstable', 'experimental'])) {
     apt::sources_list {
       'backports':
-        content => "deb $backports_url ${::debian_codename}-backports ${apt::real_repos}",
+        content => "deb ${debian_url} ${::debian_codename}-backports ${apt::repos}",
     }
     if $include_src {
       apt::sources_list {
         'backports-src':
-          content => "deb-src $backports_url ${::debian_codename}-backports ${apt::real_repos}",
+          content => "deb-src ${debian_url} ${::debian_codename}-backports ${apt::repos}",
       }
     }
   }

@@ -1,5 +1,7 @@
 class apt::reboot_required_notify::jessie ($ensure = present) {
 
+  include apt
+
   if $::operatingsystemmajrelease == 8 and ! $::apt::use_backports {
     fail('apt::reboot_required_notify requires $apt::use_backports on Jessie')
   }
@@ -24,5 +26,4 @@ class apt::reboot_required_notify::jessie ($ensure = present) {
     ensure  => $ensure,
     require => Apt::Preferences_snippet['reboot-notifier'],
   }
-
 }

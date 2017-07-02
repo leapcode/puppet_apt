@@ -49,6 +49,17 @@ class apt::preferences {
         '/etc/apt/preferences.d/custom':
           ensure => absent;
       }
+      # This file ensures that all debian packages that don't have a
+      # preference file shouldn't be considered for auto-install or upgrade at
+      # all.
+      file { '/etc/apt/preferences.d/debian_fallback':
+        ensure  => present,
+        source  => 'puppet:///modules/apt/Debian/preferences_fallback',
+        owner   => 'root',
+        group   => 0,
+        mode    => '0644',
+        require => File['/etc/apt/sources.list'],
+      }
 
       if $apt::use_volatile {
 

@@ -4,6 +4,12 @@ class apt::preferences {
       ensure => absent;
   }
 
+  # Remove the file that we were previously deploying. It's now been renamed to
+  # current_codename
+  file { '/etc/apt/preferences.d/stable':
+    ensure => absent,
+  }
+
   if ($apt::manage_preferences == true) and ($apt::custom_preferences != undef) {
 
     file {
@@ -14,7 +20,7 @@ class apt::preferences {
         require => File['/etc/apt/sources.list'],
         owner   => root, group => 0, mode => '0644';
 
-      '/etc/apt/preferences.d/stable':
+      '/etc/apt/preferences.d/current_codename':
         ensure => absent;
 
       '/etc/apt/preferences.d/volatile':
@@ -33,10 +39,10 @@ class apt::preferences {
     if $::operatingsystem == "Debian" {
 
       file {
-        '/etc/apt/preferences.d/stable':
+        '/etc/apt/preferences.d/current_codename':
           ensure  => present,
           alias   => 'apt_config',
-          content => template('apt/Debian/stable.erb'),
+          content => template('apt/Debian/current_codename.erb'),
           require => File['/etc/apt/sources.list'],
           owner   => root, group => 0, mode => '0644';
 
@@ -94,7 +100,7 @@ class apt::preferences {
       '/etc/apt/preferences.d/custom':
         ensure => absent;
 
-      '/etc/apt/preferences.d/stable':
+      '/etc/apt/preferences.d/current_codename':
         ensure => absent;
 
       '/etc/apt/preferences.d/volatile':

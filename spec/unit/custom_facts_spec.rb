@@ -14,8 +14,8 @@ describe "Facter::Util::Fact" do
         Facter.fact(:lsbdistcodename).stubs(:value).returns("wheezy")
       end
 
-      it "debian_release = oldstable" do
-        expect(Facter.fact(:debian_release).value).to eq('oldstable')
+      it "debian_release = oldoldstable" do
+        expect(Facter.fact(:debian_release).value).to eq('oldoldstable')
       end
 
       it "debian_codename = wheezy" do
@@ -26,8 +26,8 @@ describe "Facter::Util::Fact" do
         expect(Facter.fact(:debian_nextcodename).value).to eq('jessie')
       end
 
-      it "debian_nextrelease = stable" do
-        expect(Facter.fact(:debian_nextrelease).value).to eq('stable')
+      it "debian_nextrelease = oldstable" do
+        expect(Facter.fact(:debian_nextrelease).value).to eq('oldstable')
       end
     end
 
@@ -38,8 +38,8 @@ describe "Facter::Util::Fact" do
         Facter.fact(:lsbdistcodename).stubs(:value).returns("jessie")
       end
 
-      it "debian_release = stable" do
-        expect(Facter.fact(:debian_release).value).to eq('stable')
+      it "debian_release = oldstable" do
+        expect(Facter.fact(:debian_release).value).to eq('oldstable')
       end
 
       it "debian_codename = jessie" do
@@ -50,7 +50,31 @@ describe "Facter::Util::Fact" do
         expect(Facter.fact(:debian_nextcodename).value).to eq('stretch')
       end
 
-      it "debian_nextrelease = testing" do
+      it "debian_nextrelease = stable" do
+        expect(Facter.fact(:debian_nextrelease).value).to eq('stable')
+      end
+    end
+
+    context 'Debian 9' do
+      before do
+        Facter.fact(:operatingsystem).stubs(:value).returns("Debian")
+        Facter.fact(:operatingsystemrelease).stubs(:value).returns("9.0")
+        Facter.fact(:lsbdistcodename).stubs(:value).returns("stretch")
+      end
+
+      it "debian_release = stable" do
+        expect(Facter.fact(:debian_release).value).to eq('stable')
+      end
+
+      it "debian_codename = stretch" do
+        expect(Facter.fact(:debian_codename).value).to eq('stretch')
+      end
+
+      it "debian_nextcodename = stretch" do
+        expect(Facter.fact(:debian_nextcodename).value).to eq('buster')
+      end
+
+      it "debian_nextrelease = stable" do
         expect(Facter.fact(:debian_nextrelease).value).to eq('testing')
       end
     end

@@ -81,9 +81,11 @@ Maybe consider moving to a workflow using `unattended-upgrades`?
 
 ## apt-listchanges
 
-Sadly, `apt-listchanges` is not supported by the module. [Someone created a PR in 2014](https://github.com/puppetlabs/puppetlabs-apt/pull/379) but it was rejected.
+I ported and upgraded our modules `apt::listchanges` code to a
+[separate module](https://gitlab.com/baldurmen/puppet-apt_listchanges).
 
-Nothing seems to do this on the Forge either, so we would have to make our own "add-on" module to manage this. We could recycle and tweak our existing code for this.
+It basically does the same thing, but in a more modern style. Check the
+parameters list as types are now defined.
 
 ## proxy
 

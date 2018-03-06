@@ -60,6 +60,15 @@ By default, the puppetlabs module won't create any sources. To replicate the sha
         repos    => 'main contrib non-free',
         release  => "testing";
     }
+    apt::pin {
+      "${lsbdistcodename}":
+        priority => 990;
+      "${lsbdistcodename}-backports":
+        priority => 200;
+      'buster':
+        priority => 2;
+    }
+
 
 Sadly I can't find a way to iter the next codename from the facts :(. You can either use testing instead of "the next release" or specify it manually.
 
@@ -189,7 +198,12 @@ There are a bunch of new and [interesting facts](https://github.com/puppetlabs/p
 
 # Hiera
 
-Here's some sane Hiera config I'm using.
+Here's some sane Hiera config I'm using. You'll need to specify a `create_ressources` statement somewhere since `apt::pin` is a define:
+
+```
+$aptpins = hiera('apt::pin', {})                                                                                                                            
+create_resources(apt::pin, $aptpins)
+```
 
 ```
 classes:
@@ -206,7 +220,6 @@ apt::purge:
 apt::sources:
   "%{facts.lsbdistcodename}":
     comment: 'Stable'
-    pin: '990'
     location: 'http://deb.debian.org/debian/'
     repos: 'main contrib non-free'
   "%{facts.lsbdistcodename}-security":
@@ -216,16 +229,22 @@ apt::sources:
     release: "%{facts.lsbdistcodename}/updates"
   "%{facts.lsbdistcodename}-backports":
     comment: 'Backports'
-    pin: 200
     location: 'http://deb.debian.org/debian/'
     repos: 'main contrib non-free'
     release: "%{facts.lsbdistcodename}-backports"
   'buster':
     comment: 'Buster'
-    pin: 2
     location: 'http://deb.debian.org/debian/'
     repos: 'main contrib non-free'
     release: 'buster'
+    
+apt::pin:
+  "%{facts.lsbdistcodename}":
+    priority: 990
+  "%{facts.lsbdistcodename}-backports":
+    priority: 200
+  'buster':
+    priority: 2
 
 needrestart::action: automatic
 ```

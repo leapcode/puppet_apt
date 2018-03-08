@@ -65,7 +65,7 @@ By default, the puppetlabs module won't create any sources. To replicate the sha
         priority => 990;
       "${lsbdistcodename}-backports":
         priority => 200;
-      'buster':
+      'testing':
         priority => 2;
     }
 
@@ -232,18 +232,18 @@ apt::sources:
     location: 'http://deb.debian.org/debian/'
     repos: 'main contrib non-free'
     release: "%{facts.lsbdistcodename}-backports"
-  'buster':
-    comment: 'Buster'
+  'testing':
+    comment: 'Testing'
     location: 'http://deb.debian.org/debian/'
     repos: 'main contrib non-free'
-    release: 'buster'
+    release: 'testing'
     
 apt::pin:
   "%{facts.lsbdistcodename}":
     priority: 990
   "%{facts.lsbdistcodename}-backports":
     priority: 200
-  'buster':
+  'testing':
     priority: 2
 
 needrestart::action: automatic

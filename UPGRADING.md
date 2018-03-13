@@ -123,7 +123,12 @@ The puppetlabs modules does not support `unattended-upgrades` natively anymore [
 
 The recommended way to setup this feature is to use the compatible [voxpopuli/unattended-upgrades](https://github.com/voxpupuli/puppet-unattended_upgrades) module.
 
-This modules does quite a lot and is quite complex. More to come on this.
+The default configuration is quite sane, but you might want to set up automatic upgrades for the stable release too (and not just stable security):
+
+    class { 'unattended_upgrades':
+      origins   => [ 'origin=Debian,archive=stable',
+                     'origin=Debian,archive=stable,label=Debian-Security' ]
+    }
 
 # Defines comparison
 
@@ -247,4 +252,8 @@ apt::pin:
     priority: 2
 
 needrestart::action: automatic
+
+unattended_upgrades::origins:
+  - origin=Debian,archive=stable
+  - origin=Debian,archive=stable,label=Debian-Security
 ```

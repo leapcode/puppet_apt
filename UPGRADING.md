@@ -48,7 +48,7 @@ By default, the puppetlabs module won't create any sources. To replicate the sha
       "${::lsbdistcodename}-security":
         location => 'http://security.debian.org/debian-security',
         repos    => 'main contrib non-free',
-        release  => "${lsbdistcodename}/updates";
+        release  => "${::lsbdistcodename}/updates";
 
       'testing':
         location => 'http://deb.debian.org/debian',

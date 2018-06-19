@@ -50,11 +50,6 @@ By default, the puppetlabs module won't create any sources. To replicate the sha
         repos    => 'main contrib non-free',
         release  => "${lsbdistcodename}/updates";
 
-      "${::lsbdistcodename}-backports":
-        location => 'http://deb.debian.org/debian',
-        repos    => 'main contrib non-free',
-        release  => "${lsbdistcodename}-backports";
-
       'testing':
         location => 'http://deb.debian.org/debian',
         repos    => 'main contrib non-free',
@@ -63,14 +58,21 @@ By default, the puppetlabs module won't create any sources. To replicate the sha
     apt::pin {
       "${::lsbdistcodename}":
         priority => 990;
-      "${::lsbdistcodename}-backports":
-        priority => 200;
       'testing':
         priority => 2;
     }
 
 
 Sadly I can't find a way to iter the next codename from the facts :(. You can either use testing instead of "the next release" or specify it manually.
+
+## backports
+
+The module provides a class specifically for deploying the backports repository and pin.
+
+    class { 'apt::backports':
+      pin      => 200,
+      location => 'http://deb.debian.org/debian',
+    }
 
 # Classes comparison
 

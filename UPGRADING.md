@@ -41,16 +41,16 @@ To keep the old behavior, pass:
 By default, the puppetlabs module won't create any sources. To replicate the shared module template, use this:
 
     apt::source {
-      "${lsbdistcodename}":
+      $::lsbdistcodename:
         location => 'http://deb.debian.org/debian',
         repos    => 'main contrib non-free';
 
-      "${lsbdistcodename}-security":
+      "${::lsbdistcodename}-security":
         location => 'http://security.debian.org/debian-security',
         repos    => 'main contrib non-free',
         release  => "${lsbdistcodename}/updates";
 
-      "${lsbdistcodename}-backports":
+      "${::lsbdistcodename}-backports":
         location => 'http://deb.debian.org/debian',
         repos    => 'main contrib non-free',
         release  => "${lsbdistcodename}-backports";
@@ -61,9 +61,9 @@ By default, the puppetlabs module won't create any sources. To replicate the sha
         release  => "testing";
     }
     apt::pin {
-      "${lsbdistcodename}":
+      "${::lsbdistcodename}":
         priority => 990;
-      "${lsbdistcodename}-backports":
+      "${::lsbdistcodename}-backports":
         priority => 200;
       'testing':
         priority => 2;

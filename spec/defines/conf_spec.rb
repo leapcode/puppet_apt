@@ -4,14 +4,15 @@ describe 'apt::apt_conf', :type => :define do
     'class { "apt": }'
   end
   let(:facts) { {
-    :lsbdistid => 'Debian',
-    :osfamily => 'Debian',
-    :operatingsystem => 'Debian',
-    :debian_release  => 'jessie',
-    :debian_codename => 'jessie',
-    :lsbdistcodename => 'jessie',
-    :virtual         => 'physical',
-    :puppetversion   => Puppet.version, } }
+    :lsbdistid           => 'Debian',
+    :osfamily            => 'Debian',
+    :operatingsystem     => 'Debian',
+    :debian_release      => 'jessie',
+    :debian_codename     => 'jessie',
+    :lsbdistcodename     => 'jessie',
+    :debian_nextcodename => 'stretch',
+    :virtual             => 'physical',
+    :puppetversion       => Puppet.version, } }
   let :title do
     'norecommends'
   end

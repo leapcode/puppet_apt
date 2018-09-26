@@ -6,7 +6,7 @@ class apt::params () {
   $use_next_release   = false
   $manage_preferences = true
   $custom_preferences = undef
-  $debian_url         = 'http://httpredir.debian.org/debian/'
+  $debian_url         = 'http://deb.debian.org/debian/'
   $security_url       = 'http://security.debian.org/'
   $ubuntu_url         = 'http://archive.ubuntu.com/ubuntu'
   $lts_url            = $debian_url

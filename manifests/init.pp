@@ -21,13 +21,13 @@ class apt (
   $custom_key_dir      = $apt::params::custom_key_dir,
 ) inherits apt::params {
 
+  include common::moduledir
+  common::module_dir { 'apt': }
+  $apt_base_dir = "${common::moduledir::module_dir_path}/apt"
+
   include apt::dot_d_directories
   include apt::config
   include apt::install
   include apt::preferences
-
-  include common::moduledir
-  common::module_dir { 'apt': }
-  $apt_base_dir = "${common::moduledir::module_dir_path}/apt"
 
 }
